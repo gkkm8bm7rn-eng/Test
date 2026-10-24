@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="description" content="Независимая демонстрация концепции обновления мебельного каталога Secret de Maison. Два варианта оформления, каталог, коллекции, карточка товара и корзина.">
+<title>Secret Maison — концепция обновления каталога</title>
+<link rel="stylesheet" href="./styles.css">
+</head><body>
+<section class="lab" aria-label="Панель демонстрации">
+<div class="lab-in">
+<div class="lab-note">Независимая концепция Secret de Maison. Это не официальный интернет-магазин. Выбирайте палитру — оформление всех страниц изменится.</div>
+<div class="themes" role="group" aria-label="Выбор оформления">
+<button type="button" class="theme-btn" data-theme="olive" aria-pressed="true"><span class="swatches" aria-hidden="true"><i style="background:#F4EEDF"></i><i style="background:#66705A"></i><i style="background:#6B3E47"></i></span>01 · Олива / бордо</button>
+<button type="button" class="theme-btn" data-theme="petrol" aria-pressed="false"><span class="swatches" aria-hidden="true"><i style="background:#F3F1EC"></i><i style="background:#4F6A6D"></i><i style="background:#B5775C"></i></span>02 · Петроль / терракота</button>
+</div></div></section>
+<div class="site" id="site">
+<div class="ribbon">МЕБЕЛЬ И ПРЕДМЕТЫ ИНТЕРЬЕРА · ДЕМОНСТРАЦИОННАЯ КОНЦЕПЦИЯ</div>
+<header class="site-header wrap">
+<button class="logo" data-go="home">Secret Maison<span>.</span></button>
+<nav class="menu" aria-label="Навигация по демосайту">
+<button type="button" data-go="catalog">Каталог</button>
+<button type="button" data-go="collections">Коллекции</button>
+<button type="button" data-go="journal">Журнал</button>
+<button type="button" data-go="concept">Идея</button>
+<button type="button" data-go="cart">Корзина <span class="cart-count" id="cartBadge">0</span></button>
+</nav></header>
+<main>
+<section data-view="home">
+<div class="hero"><div class="hero-copy">
+<div class="kicker">Интерьеры, в которых хочется остаться</div>
+<h1>Мебель с характером. Дом с историей.</h1>
+<p>Натуральные материалы, выразительные силуэты и коллекции, созданные для жизни.</p>
+<button type="button" class="button" data-go="catalog">Открыть каталог <span>↗</span></button>
+</div><div class="hero-image"><img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1500&q=85" alt="Светлая гостиная с натуральными материалами" loading="eager"><span class="hero-caption">Визуальная атмосфера · демонстрационный снимок</span></div></div>
+<div class="wrap">
+<div class="home-space"><div class="section-head"><h2>Найдите свой предмет</h2><button type="button" class="linkish" data-go="catalog">Весь каталог ↗</button></div>
+<div class="triptych">
+<button type="button" data-go="catalog" data-category="Стулья"><img src="https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=700&q=80" alt="Стулья"><h3>Стулья</h3><p>Лёгкость формы и материалов</p></button>
+<button type="button" data-go="catalog" data-category="Кресла"><img src="https://images.unsplash.com/photo-1598300056393-4aac492f4344?auto=format&fit=crop&w=700&q=80" alt="Кресла"><h3>Кресла</h3><p>Место для отдыха</p></button>
+<button type="button" data-go="catalog" data-category="Тумбы"><img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=700&q=80" alt="Предметы интерьера"><h3>Тумбы и комоды</h3><p>Красота хранения</p></button>
+</div></div>
+<div class="home-space" style="border-top:1px solid var(--line)"><div class="section-head"><h2>Выбрано для вас</h2><button type="button" class="linkish" data-go="catalog">Смотреть все ↗</button></div><div class="product-grid" id="featuredGrid"></div></div>
+</div>
+<div class="feature"><div class="img"><img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85" alt="Интерьер в естественных оттенках"></div><aside><div class="kicker">Коллекции</div><h2>У каждого дома — своя история</h2><p>Откройте предметы, объединённые настроением, материалом и авторской идеей.</p><button class="button" data-go="collections" type="button">Выбрать коллекцию ↗</button></aside></div>
+</section>
+<section class="screen wrap" data-view="catalog" hidden>
+<div class="page-intro"><div class="kicker">Secret Maison · каталог</div><h1>Каталог мебели</h1><p>Сначала выбирайте тип предмета. Затем уточняйте коллекцию, материал или стоимость. Фильтры работают совместно, не сбрасывая друг друга.</p></div>
+<div class="category-layout catalog-layout">
+<aside class="facets"><h3>Подобрать</h3>
+<div class="facet-group"><p>Категория</p><div class="chip-row" id="catFilters"></div></div>
+<div class="facet-group"><p>Коллекция</p><div class="chip-row" id="colFilters"></div></div>
+<div class="facet-group"><p>Материал</p><div class="chip-row" id="matFilters"></div></div>
+<button class="linkish small" data-reset="filters" type="button">Сбросить фильтры</button>
+</aside>
+<div><div class="catalog-tools"><span id="resultCount">Товары</span><label class="small">Сортировка <select id="sortSelect"><option value="default">По умолчанию</option><option value="low">Сначала дешевле</option><option value="high">Сначала дороже</option></select></label></div><div class="product-grid" id="catalogGrid"></div></div></div></section>
+<section class="screen wrap" data-view="collections" hidden>
+<div class="page-intro"><div class="kicker">Подбор по сериям</div><h1>Коллекции</h1><p>Коллекция — это самостоятельный путь к мебели. Один товар может находиться одновременно в своей категории и на странице коллекции, без создания дубликатов.</p></div>
+<div class="collection-tiles" id="collectionTiles"></div>
+<div class="collection-lead" id="collectionLead"></div><div class="product-grid" id="collectionGrid"></div>
+</section>
+<section class="screen wrap" data-view="product" hidden>
+<div class="breadcrumbs"><button class="linkish" data-go="catalog">Каталог</button> / <span id="detailBreadcrumb">Товар</span></div>
+<div class="detail-layout"><div id="detailImage"></div><div>
+<div class="kicker" id="detailCategory"></div><h1 class="detail-title" id="detailName"></h1><div class="small muted" id="detailSku"></div>
+<div class="detail-price" id="detailPrice"></div>
+<div id="detailSpecs"></div><p class="detail-desc" id="detailText"></p>
+<div class="status">Демонстрационная карточка · актуальные наличие и цена требуют проверки</div>
+<div class="buy-row"><div class="stepper"><button type="button" data-quantity="-1" aria-label="Уменьшить количество">−</button><input type="number" id="productQty" min="1" max="999" value="1" inputmode="numeric" aria-label="Количество товара"><button type="button" data-quantity="1" aria-label="Увеличить количество">+</button></div><button class="button" type="button" id="addToCart">Добавить в демо-корзину</button></div><div id="productFeedback" class="status" role="status"></div>
+</div></div><div class="long-copy"><h2>Описание</h2><p id="detailLong"></p><button class="linkish" data-go="catalog" type="button">Вернуться к каталогу ↗</button></div>
+</section>
+<section class="screen wrap" data-view="journal" hidden>
+<article class="prose"><div class="kicker">Журнал · статья · пример переноса существующего контента</div><h1>Уют как искусство: когда детали рассказывают историю</h1>
+<p class="lead">В новом дизайне редакционные статьи остаются полноценными страницами, а не исчезают после обновления каталога.</p>
+<div class="article-image"><img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1100&q=80" alt="Атмосферный интерьер"></div>
+<p>Интерьер складывается из цвета, света, предметов и привычек. Натуральные поверхности не спорят между собой, а становятся фоном для личной истории дома.</p>
+<h2>Мягкая палитра и выразительная фактура</h2>
+<p>В мебели из дерева, льна и ротанга особенно заметны нюансы: рисунок волокон, переплетение нитей, лёгкие оттенки натуральной отделки. Всё это важно и для эстетики, и для удобства выбора.</p>
+<blockquote>Каталог должен не только показывать предмет, но и помогать представить его в собственном доме.</blockquote>
+<h2>Сохранить контент, обновить представление</h2>
+<p>Это образец нового шаблона для уже существующих статей. В будущем сохраняем оригинальные тексты, даты публикации, авторство, URL и ссылки — после проверки прав, структуры и SEO-настроек. Не заменяем накопленные страницы случайно сгенерированными материалами.</p>
+<p><a href="https://secretdemaison.ru/blog/uyut-kak-iskusstvo-kak-sozdat-interer-gde-kazhdaya-detal-rasskazyvaet-istoriyu.html" target="_blank" rel="noopener">Пример действующей статьи на сайте Secret de Maison ↗</a></p>
+</article></section>
+<section class="screen wrap" data-view="cart" hidden>
+<div class="page-intro"><div class="kicker">Путь покупателя</div><h1>Корзина</h1><p>В этой версии количество и сумма синхронны. Изменяйте цифру прямо в поле или кнопками — итог пересчитывается в обоих случаях.</p></div>
+<div class="cart-layout"><div id="cartItems"></div><aside class="cart-panel"><h3>Ваш выбор</h3><div class="total-line"><span>Предметов</span><span id="cartUnits">0</span></div><div class="total-line final"><span>Итого</span><span id="cartTotal">0 ₽</span></div><p class="small muted" style="margin-top:19px">Демонстрационная корзина: не проводит оплату, не сохраняет заказ у продавца и не учитывает доставку.</p><button class="button" type="button" id="cartDemoButton">Как работает согласованный расчёт ↗</button></aside></div>
+</section>
+<section class="screen wrap" data-view="concept" hidden>
+<div class="page-intro"><div class="kicker">Для руководства · независимое предложение</div><h1>Не просто обновить сайт. Сделать выбор и покупку проще.</h1><p>Действующий ассортимент и накопленный контент — актив компании. Мы предлагаем улучшить путь покупателя и сохранить эти преимущества.</p></div>
+<div class="biz-grid">
+<div class="biz-card"><div class="kicker">01 · Доверие к заказу</div><h3>Ожидания покупателя совпадают с расчётом</h3><p>На старом сценарии ручное количество могло не менять итог. Это создаёт неверное ожидание. В новой демо-корзине видно, как расчёт должен работать.</p><button class="linkish" data-demo="cart" type="button">Открыть пример ↗</button></div>
+<div class="biz-card"><div class="kicker">02 · Поиск и выбор</div><h3>Большой ассортимент становится понятнее</h3><p>Категории, коллекции и материалы — разные способы найти один и тот же товар. Комбинации фильтров работают предсказуемо.</p><button class="linkish" data-go="catalog" type="button">Смотреть каталог ↗</button></div>
+<div class="biz-card"><div class="kicker">03 · Момент покупки</div><h3>Цена и действие видны там, где нужны</h3><p>Предлагаемый шаблон карточки выделяет цену, ключевые характеристики и управление количеством без длительного поиска по странице.</p><button class="linkish" data-open-product="24412" type="button">Смотреть карточку ↗</button></div>
+<div class="biz-card"><div class="kicker">04 · Долгосрочная ценность</div><h3>Контент и SEO остаются активом</h3><p>В реальном внедрении анализируем старые адреса, публикации, внутренние ссылки, страницы товаров, а не удаляем их вместе со старым оформлением.</p><button class="linkish" data-go="journal" type="button">Смотреть статью ↗</button></div>
+</div><p class="small muted" style="margin-top:25px">Пример основан на независимом аудите от 02.09.2026; перед публичной презентацией обнаруженные тогда ошибки необходимо повторно проверить. Коммерческий эффект не измерялся. Юридические последствия не утверждаются.</p>
+</section>
+</main><footer class="site-footer wrap"><div class="footer-cols">
+<div><button class="logo" data-go="home">Secret Maison<span>.</span></button><p class="small">Независимый дизайн-прототип для обсуждения развития сайта. Не является официальным предложением товаров; изображения и примерные цены требуют проверки. Покупки и оформление заказов отключены.</p></div>
+<div class="footer-nav"><span class="kicker">Открыть</span><button data-go="catalog">Каталог</button><button data-go="collections">Коллекции</button><button data-go="journal">Журнал</button></div>
+<div class="footer-nav"><span class="kicker">Проект</span><button data-go="concept">Идея обновления</button><a href="https://secretdemaison.ru/" target="_blank" rel="noopener">Действующий сайт ↗</a></div>
+</div></footer>
+</div><script src="./app.js" defer></script></body></html>
