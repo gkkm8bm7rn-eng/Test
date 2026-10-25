@@ -1,0 +1,37 @@
+{
+  "24412": {
+    "name": "Loki chair black",
+    "page": "https://secretdemaison.ru/products/stul-loki-modxmscb2895-derevo-vyaz_rotang-51h44h86-sm-chernyiy.html",
+    "image": "https://secretdemaison.ru/netcat_files/generated/31/262/942x942/70965/d9a5d530679e03d1f26bd8eb24d50e87.jpg?crop=0%3A0%3A0%3A0&hash=3fdca7e255249c3f9e4315edc2434bff&resize_mode=0&wm_m=0&scale=1",
+    "path": "assets/products/24412.webp",
+    "sha256": "fbbc6685f2308d7b85e9adae1e3b38f26fbec0ca12e8146363935950e7fb17c9"
+  },
+  "19215": {
+    "name": "Riviera bedside cabinet",
+    "page": "https://secretdemaison.ru/products/tumba-secret-de-maison-riviera--modnsd001-derevo-mango-50x40x70-sm-antique-white_white-wash0.html",
+    "image": "https://secretdemaison.ru/netcat_files/generated/31/262/942x942/48903/d9a5d530679e03d1f26bd8eb24d50e87.jpg?crop=0%3A0%3A0%3A0&hash=3fdca7e255249c3f9e4315edc2434bff&resize_mode=0&wm_m=0&scale=1",
+    "path": "assets/products/19215.webp",
+    "sha256": "11db4dcdb4f6226ce909beb5a245643e183aa6786dc29a7a1199accbb7afbfb5"
+  },
+  "13167": {
+    "name": "Oslo armchair blue",
+    "page": "https://secretdemaison.ru/products/kreslo-secret-de-maison-oslo-mod-5380-20c-derevo-bereza-tkan-vel-vet-97-95-83-temno-siniy.html",
+    "image": "https://secretdemaison.ru/netcat_files/generated/31/262/942x942/34308/d9a5d530679e03d1f26bd8eb24d50e87.jpg?crop=0%3A0%3A0%3A0&hash=3fdca7e255249c3f9e4315edc2434bff&resize_mode=0&wm_m=0&scale=1",
+    "path": "assets/products/13167.webp",
+    "sha256": "47eeb2d618a529bb218736a09b0b160aa9c0519ace8799b24e84d6f55966dae9"
+  },
+  "24405": {
+    "name": "Baldur chair black",
+    "page": "https://secretdemaison.ru/products/stul-baldur-modxmscb2921d-derevo-vyaz_tkan-len-49h52h765-sm-chernyiy_chernyiy-len.html",
+    "image": "https://secretdemaison.ru/netcat_files/284/300/apreviewz71002.jpg",
+    "path": "assets/products/24405.webp",
+    "sha256": "e27f46fc785f2555a17a127361b646105d23dc2a2e3dbc339656bc6bb1351aa2"
+  },
+  "12828": {
+    "name": "Retro sofa",
+    "page": "https://secretdemaison.ru/products/divan-secret-de-maison-retro-mod-cd5021.html",
+    "image": "https://secretdemaison.ru/netcat_files/100/110/previewz4575.jpg",
+    "path": "assets/products/12828.webp",
+    "sha256": "4410054d9f2c5d8582388206c81a8d360542e0189e031f015302b73ccaf1e1ad"
+  }
+}
