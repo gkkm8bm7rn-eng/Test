@@ -16,6 +16,8 @@
    Full-bleed accent zones and coherent contrast; mobile gutters are explicit.
    Brand logo must preserve official "Secret de Maison" spelling. */
 .site{
+ --line:color-mix(in srgb,var(--ink) 17%,var(--paper));
+ --wash:color-mix(in srgb,var(--neutral) 17%,var(--paper));
  --tone-primary:color-mix(in srgb,var(--primary) 20%,var(--paper));
  --tone-secondary:color-mix(in srgb,var(--second) 21%,var(--paper));
  --tone-neutral:color-mix(in srgb,var(--neutral) 49%,var(--paper));
