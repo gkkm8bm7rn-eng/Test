@@ -56,7 +56,7 @@ function renderFeatured(){cardsTo('#featuredGrid',PRODUCTS.slice(0,4))}
 function renderFilters(){
  const entries=[
   ['#catFilters','cat',['Все','Стулья','Кресла','Тумбы','Диваны']],
-  ['#colFilters','col',['Все','Riviera','Maison','Naturwood']],
+  ['#colFilters','col',['Все','Riviera','Maison']],
   ['#matFilters','mat',['Все','Дерево','Ткань']]
  ];
  for(const [sel,key,values] of entries){
