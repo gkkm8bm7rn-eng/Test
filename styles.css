@@ -149,3 +149,74 @@
 .theme-btn[data-theme="olive"][aria-pressed="true"]{border-color:#6B3E47;background:#F4EEDF}
 .theme-btn[data-theme="petrol"][aria-pressed="true"]{border-color:#B5775C;background:#F3F1EC}
 @media(max-width:620px){.swatches i{width:9px}.theme-btn{gap:7px;font-size:11px}}
+
+
+/* THIRD THEME — only a palette. Same real SKUs, photography, layout and functions.
+   Inspired by dark petrol/charcoal textile, cognac leather, warm taupe and brass.
+   Support accessible contrast because the existing two palettes are light. */
+.theme-btn[data-theme="nocturne"][aria-pressed="true"]{background:#14262B;color:#F6ECE0;border-color:#A1644B}
+.theme-btn[data-theme="nocturne"][aria-pressed="true"] .swatches i{border:1px solid #FFFFFF35}
+.site[data-theme="nocturne"]{
+ color-scheme:dark;
+ --night-gold:#C3A077;
+ --night-light:#C8D1CF;
+ --tone-primary-deep:#E5D4BE;
+ --tone-primary-light:#1B343A;
+ --tone-primary:#213A41;
+ --tone-neutral:#343836;
+ --tone-secondary:#302B2A;
+ --accent-ink:#D5A28E;
+ --line:#6A6C6780;
+ --wash:#283D41;
+}
+.site[data-theme="nocturne"] .logo .logo-de{color:var(--night-gold)}
+.site[data-theme="nocturne"] .ribbon{background:#29464D;color:#F3E7DA}
+.site[data-theme="nocturne"] .site-header{border-bottom-color:#67756F}
+.site[data-theme="nocturne"] .site-header .menu button[aria-current="page"]{color:var(--night-gold);border-bottom-color:var(--night-gold)}
+.site[data-theme="nocturne"] .hero{border-bottom-color:#6E4639}
+.site[data-theme="nocturne"] .hero-copy{background:#1C3239}
+.site[data-theme="nocturne"] .hero-copy::before{background:var(--night-gold)}
+.site[data-theme="nocturne"] .hero-copy .kicker{color:var(--night-gold)}
+.site[data-theme="nocturne"] .hero-emphasis{color:#DBC6AE}
+.site[data-theme="nocturne"] .hero-image{background:#746E66}
+.site[data-theme="nocturne"] .hero-image img{background:#CBC0B3;mix-blend-mode:multiply}
+.site[data-theme="nocturne"] .hero-caption{background:#29464D}
+.site[data-theme="nocturne"] .section-head{border-bottom-color:#566F75}
+.site[data-theme="nocturne"] .linkish{color:var(--night-light)}
+.site[data-theme="nocturne"] .triptych h3{color:#E5D4BE}
+.site[data-theme="nocturne"] .triptych button{border-bottom-color:#627479}
+.site[data-theme="nocturne"] .triptych img{background:#D4CABE}
+.site[data-theme="nocturne"] .product-card .meta{color:var(--night-light)}
+.site[data-theme="nocturne"] .product-card .price{border-left-color:var(--second)}
+.site[data-theme="nocturne"] .feature{background:#25444C}
+.site[data-theme="nocturne"] .feature .img{background:#494746}
+.site[data-theme="nocturne"] .feature img{background:#9B8E81;mix-blend-mode:multiply}
+.site[data-theme="nocturne"] .facets{background:#253B40;border-top-color:#789092}
+.site[data-theme="nocturne"] .chip{background:#1B3239;border-color:#6D807E;color:#E9DFD2}
+.site[data-theme="nocturne"] .chip.selected{background:#355863;border-color:#355863;color:#FFF7EC}
+.site[data-theme="nocturne"] .catalog-tools{color:var(--night-light);border-top-color:#6E8788}
+.site[data-theme="nocturne"] .catalog-tools select{background:#203239;color:#F3E9DD}
+.site[data-theme="nocturne"] .collection-box{border-left-color:#6D8B8D!important}
+.site[data-theme="nocturne"] .collection-box:after{border-color:#7B9896}
+.site[data-theme="nocturne"] .collection-tiles button:nth-child(2) .collection-box{background:#342F2E;border-left-color:#A1644B!important}
+.site[data-theme="nocturne"] .collection-tiles button:nth-child(3) .collection-box{background:#353A39}
+.site[data-theme="nocturne"] .collection-box h3,.site[data-theme="nocturne"] .collection-lead h2{color:#E9D8C4}
+.site[data-theme="nocturne"] .detail-price{border-bottom-color:#896855}
+.site[data-theme="nocturne"] .status{color:var(--night-light)}
+.site[data-theme="nocturne"] .prose h2{color:#E5D4BE}
+.site[data-theme="nocturne"] .prose .kicker{color:var(--night-gold)}
+.site[data-theme="nocturne"] .article-image{background:#494746}
+.site[data-theme="nocturne"] .article-image img{background:#C4B9AA;mix-blend-mode:multiply}
+.site[data-theme="nocturne"] .cart-panel{background:#233B41;border-top-color:#789296}
+.site[data-theme="nocturne"] .cart-panel h3{color:#E8D7C3}
+.site[data-theme="nocturne"] .total-line.final{border-top-color:#789296}
+.site[data-theme="nocturne"] .biz-card{background:#21373D;border-top-color:#789296}
+.site[data-theme="nocturne"] .biz-card:nth-child(2n){background:#302D2B;border-top-color:#9E7158}
+.site[data-theme="nocturne"] .site-footer{background:#273236;border-top-color:#647F80}
+.site[data-theme="nocturne"] .site-footer .footer-nav a{color:var(--night-light)}
+.site[data-theme="nocturne"] .button{background:#345661;border-color:#718B8A;color:#FFF5E8}
+.site[data-theme="nocturne"] .button:hover{background:#446873;border-color:#8CA7A5}
+.site[data-theme="nocturne"] .button:focus-visible{outline-color:var(--night-gold)}
+@media(max-width:620px){
+ .theme-btn[data-theme="nocturne"]{grid-column:1/-1;justify-content:center}
+}
