@@ -71,7 +71,7 @@ function filtered(){
 }
 function renderCatalog(){renderFilters();const list=filtered();$('#resultCount').textContent=list.length+' '+(list.length===1?'предмет':'предметов')+' в подборке';cardsTo('#catalogGrid',list);$('#sortSelect').value=state.sort}
 function renderCollections(){
- $('#collectionTiles').innerHTML=Object.keys(COLLECTIONS).map(key=>'<button type="button" data-choose-collection="'+key+'" aria-pressed="'+(key===state.collection)+'"><div class="collection-box" style="border:'+(key===state.collection?'2px solid var(--second)':'1px solid var(--line)')+'"><div><p class="kicker">'+COLLECTIONS[key].sub+'</p><h3>'+COLLECTIONS[key].title+'</h3></div></div></button>').join('');
+ $('#collectionTiles').innerHTML=Object.keys(COLLECTIONS).filter(key=>PRODUCTS.some(p=>p.col===key)).map(key=>'<button type="button" data-choose-collection="'+key+'" aria-pressed="'+(key===state.collection)+'"><div class="collection-box" style="border:'+(key===state.collection?'2px solid var(--second)':'1px solid var(--line)')+'"><div><p class="kicker">'+COLLECTIONS[key].sub+'</p><h3>'+COLLECTIONS[key].title+'</h3></div></div></button>').join('');
  const selected=COLLECTIONS[state.collection];
  $('#collectionLead').innerHTML='<h2>'+selected.title+'</h2><p>'+selected.text+'</p><div class="small muted">Товары коллекции · демонстрационная выборка</div>';
  cardsTo('#collectionGrid',PRODUCTS.filter(p=>p.col===state.collection));
