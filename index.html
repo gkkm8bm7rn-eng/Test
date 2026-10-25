@@ -3,7 +3,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
 <meta name="description" content="Независимая демонстрация концепции обновления мебельного каталога Secret de Maison. Два варианта оформления, каталог, коллекции, карточка товара и корзина.">
-<title>Secret Maison — концепция обновления каталога</title>
+<title>Secret de Maison — концепция обновления каталога</title>
 <link rel="stylesheet" href="./styles.css">
 </head><body>
 <section class="lab" aria-label="Панель демонстрации">
@@ -16,7 +16,7 @@
 <div class="site" id="site">
 <div class="ribbon">МЕБЕЛЬ И ПРЕДМЕТЫ ИНТЕРЬЕРА · ДЕМОНСТРАЦИОННАЯ КОНЦЕПЦИЯ</div>
 <header class="site-header wrap">
-<button class="logo" data-go="home">Secret Maison<span>.</span></button>
+<button class="logo" data-go="home">Secret <span class="logo-de">de</span> Maison</button>
 <nav class="menu" aria-label="Навигация по демосайту">
 <button type="button" data-go="catalog">Каталог</button>
 <button type="button" data-go="collections">Коллекции</button>
@@ -28,23 +28,23 @@
 <section data-view="home">
 <div class="hero"><div class="hero-copy">
 <div class="kicker">Интерьеры, в которых хочется остаться</div>
-<h1>Мебель с характером. Дом с историей.</h1>
+<h1>Мебель с характером. <span class="hero-emphasis">Дом с историей.</span></h1>
 <p>Натуральные материалы, выразительные силуэты и коллекции, созданные для жизни.</p>
 <button type="button" class="button" data-go="catalog">Открыть каталог </button>
-</div><div class="hero-image"><img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1500&q=85" alt="Светлая гостиная с натуральными материалами" loading="eager"><span class="hero-caption">Визуальная атмосфера · демонстрационный снимок</span></div></div>
+</div><div class="hero-image"><img src="./assets/products/19215.webp" alt="Тумба Riviera из массива манго, артикул 19215" loading="eager"><span class="hero-caption">Коллекция Riviera · артикул 19215</span></div></div>
 <div class="wrap">
 <div class="home-space"><div class="section-head"><h2>Найдите свой предмет</h2><button type="button" class="linkish" data-go="catalog">Весь каталог </button></div>
 <div class="triptych">
-<button type="button" data-go="catalog" data-category="Стулья"><img src="https://secretdemaison.ru/netcat_files/generated/31/262/942x942/70965/d9a5d530679e03d1f26bd8eb24d50e87.jpg?crop=0%3A0%3A0%3A0&hash=3fdca7e255249c3f9e4315edc2434bff&resize_mode=0&wm_m=0&scale=1" alt="Стул Локи / Loki"><h3>Стулья</h3><p>Лёгкость формы и материалов</p></button>
-<button type="button" data-go="catalog" data-category="Кресла"><img src="https://secretdemaison.ru/netcat_files/generated/31/262/942x942/34308/d9a5d530679e03d1f26bd8eb24d50e87.jpg?crop=0%3A0%3A0%3A0&hash=3fdca7e255249c3f9e4315edc2434bff&resize_mode=0&wm_m=0&scale=1" alt="Кресло Осло / Oslo"><h3>Кресла</h3><p>Место для отдыха</p></button>
-<button type="button" data-go="catalog" data-category="Тумбы"><img src="https://secretdemaison.ru/netcat_files/generated/31/262/942x942/48903/d9a5d530679e03d1f26bd8eb24d50e87.jpg?crop=0%3A0%3A0%3A0&hash=3fdca7e255249c3f9e4315edc2434bff&resize_mode=0&wm_m=0&scale=1" alt="Тумба Ривьера / Riviera"><h3>Тумбы и комоды</h3><p>Красота хранения</p></button>
+<button type="button" data-go="catalog" data-category="Стулья"><img src="./assets/products/24412.webp" alt="Стул Локи / Loki"><h3>Стулья</h3><p>Лёгкость формы и материалов</p></button>
+<button type="button" data-go="catalog" data-category="Кресла"><img src="./assets/products/13167.webp" alt="Кресло Осло / Oslo"><h3>Кресла</h3><p>Место для отдыха</p></button>
+<button type="button" data-go="catalog" data-category="Тумбы"><img src="./assets/products/19215.webp" alt="Тумба Ривьера / Riviera"><h3>Тумбы и комоды</h3><p>Красота хранения</p></button>
 </div></div>
 <div class="home-space" style="border-top:1px solid var(--line)"><div class="section-head"><h2>Выбрано для вас</h2><button type="button" class="linkish" data-go="catalog">Смотреть все </button></div><div class="product-grid" id="featuredGrid"></div></div>
 </div>
-<div class="feature"><div class="img"><img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85" alt="Интерьер в естественных оттенках"></div><aside><div class="kicker">Коллекции</div><h2>У каждого дома — своя история</h2><p>Откройте предметы, объединённые настроением, материалом и авторской идеей.</p><button class="button" data-go="collections" type="button">Выбрать коллекцию </button></aside></div>
+<div class="feature"><div class="img"><img src="./assets/products/13167.webp" alt="Кресло Oslo, артикул 13167, коллекция Maison"></div><aside><div class="kicker">Коллекции</div><h2>У каждого дома — своя история</h2><p>Откройте предметы, объединённые настроением, материалом и авторской идеей.</p><button class="button" data-go="collections" type="button">Выбрать коллекцию </button></aside></div>
 </section>
 <section class="screen wrap" data-view="catalog" hidden>
-<div class="page-intro"><div class="kicker">Secret Maison · каталог</div><h1>Каталог мебели</h1><p>Сначала выбирайте тип предмета. Затем уточняйте коллекцию, материал или стоимость. Фильтры работают совместно, не сбрасывая друг друга.</p></div>
+<div class="page-intro"><div class="kicker">Secret de Maison · каталог</div><h1>Каталог мебели</h1><p>Сначала выбирайте тип предмета. Затем уточняйте коллекцию, материал или стоимость. Фильтры работают совместно, не сбрасывая друг друга.</p></div>
 <div class="category-layout catalog-layout">
 <aside class="facets"><h3>Подобрать</h3>
 <div class="facet-group"><p>Категория</p><div class="chip-row" id="catFilters"></div></div>
@@ -71,7 +71,7 @@
 <section class="screen wrap" data-view="journal" hidden>
 <article class="prose"><div class="kicker">Журнал · статья · пример переноса существующего контента</div><h1>Уют как искусство: когда детали рассказывают историю</h1>
 <p class="lead">В новом дизайне редакционные статьи остаются полноценными страницами, а не исчезают после обновления каталога.</p>
-<div class="article-image"><img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1100&q=80" alt="Атмосферный интерьер"></div>
+<div class="article-image"><img src="./assets/products/24412.webp" alt="Стул Loki, артикул 24412"></div>
 <p>Интерьер складывается из цвета, света, предметов и привычек. Натуральные поверхности не спорят между собой, а становятся фоном для личной истории дома.</p>
 <h2>Мягкая палитра и выразительная фактура</h2>
 <p>В мебели из дерева, льна и ротанга особенно заметны нюансы: рисунок волокон, переплетение нитей, лёгкие оттенки натуральной отделки. Всё это важно и для эстетики, и для удобства выбора.</p>
@@ -94,7 +94,7 @@
 </div><p class="small muted" style="margin-top:25px">Пример основан на независимом аудите от 02.09.2026; перед публичной презентацией обнаруженные тогда ошибки необходимо повторно проверить. Коммерческий эффект не измерялся. Юридические последствия не утверждаются.</p>
 </section>
 </main><footer class="site-footer wrap"><div class="footer-cols">
-<div><button class="logo" data-go="home">Secret Maison<span>.</span></button><p class="small">Независимый дизайн-прототип для обсуждения развития сайта. Не является официальным предложением товаров; изображения и примерные цены требуют проверки. Покупки и оформление заказов отключены.</p></div>
+<div><button class="logo" data-go="home">Secret <span class="logo-de">de</span> Maison</button><p class="small">Независимый дизайн-прототип для обсуждения развития сайта. Не является официальным предложением товаров; изображения и примерные цены требуют проверки. Покупки и оформление заказов отключены.</p></div>
 <div class="footer-nav"><span class="kicker">Открыть</span><button data-go="catalog">Каталог</button><button data-go="collections">Коллекции</button><button data-go="journal">Журнал</button></div>
 <div class="footer-nav"><span class="kicker">Проект</span><button data-go="concept">Идея обновления</button><a href="https://secretdemaison.ru/" target="_blank" rel="noopener">Действующий сайт </a></div>
 </div></footer>
