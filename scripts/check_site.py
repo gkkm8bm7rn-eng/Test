@@ -53,8 +53,28 @@ must("referrerpolicy" not in HTML or True,"")
 must("data-theme=\"olive\"" in HTML and "data-theme=\"petrol\"" in HTML,"Missing selectable palettes")
 for key in ["paper","primary","second","neutral","ink"]:
     must(key+":" in JS or "'"+key+"':" in JS,"Palette key missing: "+key)
-for role in [".hero-copy{background:var(--tone-primary)",".feature{background:var(--second)",".cart-panel{background:var(--tone-secondary)",".site-footer{background:var(--tone-neutral)"]:
-    must(role in CSS,"Theme role absent: "+role)
+# Primary-dominant theme hierarchy (the secondary must not become a giant surface).
+# Validate effective declarations from the latest semantic-palette section, not
+# historical base rules retained earlier in the stylesheet.
+palette_start=CSS.find("/* Semantic palette rule:")
+must(palette_start>=0,"Missing centralized semantic palette")
+effective_css=CSS[palette_start:] if palette_start>=0 else ""
+for role in [
+    ".hero-copy{background:var(--tone-primary)",
+    ".ribbon{background:var(--primary)",
+    ".feature{background:var(--primary)",
+    ".home-space:nth-child(2){background:var(--tone-primary-light)",
+    ".cart-panel{background:var(--tone-primary)",
+    ".prose blockquote{background:var(--tone-primary-light)",
+    ".site-footer{background:var(--tone-neutral)"
+]:
+    must(role in effective_css,"Primary-dominant theme role missing: "+role)
+for selector in [".ribbon",".feature",".cart-panel",".prose blockquote",".biz-card"]:
+    must(not re.search(re.escape(selector)+r"\{background:var\(--second\)",effective_css),
+         "Secondary accent must not occupy major surfaces: "+selector)
+must("color:var(--accent-ink)" in effective_css,"Missing secondary accent in prices and details")
+must("color-mix(in srgb,var(--second) 9%,var(--paper))" in effective_css,
+     "Secondary tint too strong; palette hierarchy at risk")
 must("clamp(28px,5vw,76px)" in CSS and "padding-inline:27px" in CSS,"Missing deliberate outer gutters")
 must("object-fit:contain" in CSS,"Main product images may be cropped")
 must("aria-label=\"Количество товара\"" in HTML,"Missing accessible quantity label")
