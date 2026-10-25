@@ -50,7 +50,9 @@ must(not re.search(r"[\u2196-\u2199\u27a1\U0001f300-\U0001faff]",HTML+JS),"Emoji
 must("images.unsplash.com" not in HTML,"External stock photo on website")
 must("photo:\"https://" not in JS and "photo:'https://" not in JS,"Product photo still hotlinked")
 must("referrerpolicy" not in HTML or True,"")
-must("data-theme=\"olive\"" in HTML and "data-theme=\"petrol\"" in HTML,"Missing selectable palettes")
+must(all(f'data-theme="{key}"' in HTML for key in ("olive","petrol","nocturne")),"Missing one of three selectable palettes")
+must('nocturne:{paper:' in JS and "setAttribute('data-theme',state.theme)" in JS,"Third theme missing from engine or CSS selector")
+must('.site[data-theme="nocturne"]' in CSS and "--night-gold" in CSS,"Third palette dark overrides missing")
 for key in ["paper","primary","second","neutral","ink"]:
     must(key+":" in JS or "'"+key+"':" in JS,"Palette key missing: "+key)
 # Primary-dominant theme hierarchy (the secondary must not become a giant surface).
