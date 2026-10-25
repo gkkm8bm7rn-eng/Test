@@ -90,7 +90,7 @@ function renderProduct(){
  ['Материал',p.material],['Отделка',p.finish],['Размеры',p.dims],['Коллекция',p.col||'Без подтверждённой коллекции']
  ].map(([a,b])=>'<div class="spec-row"><span>'+a+'</span><span>'+b+'</span></div>').join('');
  $('#detailText').textContent=p.desc;
- $('#detailLong').innerHTML='Предмет из публичного ассортимента Secret de Maison. Для реального запуска фото, стоимость, остатки, материалы и все варианты исполнения необходимо сверить с актуальными товарными данными. <a href="'+p.source+'" target="_blank" rel="noopener">Открыть источник ↗</a>';
+ $('#detailLong').innerHTML='Предмет из публичного ассортимента Secret de Maison. Для реального запуска фото, стоимость, остатки, материалы и все варианты исполнения необходимо сверить с актуальными товарными данными. <a href="'+p.source+'" target="_blank" rel="noopener">Открыть источник </a>';
  $('#productQty').value='1';$('#productFeedback').textContent='';
 }
 function openProduct(id){if(!PRODUCTS.some(p=>p.id===id))return;state.chosen=id;go('product')}
@@ -122,7 +122,7 @@ function renderCart(){
  '<div class="stepper" style="width:max-content;margin-top:10px"><button type="button" aria-label="Уменьшить количество" data-cart-step="'+p.id+'" data-delta="-1">−</button>'+
  '<input type="number" inputmode="numeric" min="1" max="999" aria-label="Количество '+p.name+'" data-cart-input="'+p.id+'" value="'+state.cart[p.id]+'">'+
  '<button type="button" aria-label="Увеличить количество" data-cart-step="'+p.id+'" data-delta="1">+</button></div></div>'+
- '<div class="pricebox"><div class="cart-price" data-row-total="'+p.id+'">'+rub(p.price*state.cart[p.id])+'</div><button type="button" class="remove" data-remove="'+p.id+'">Убрать</button></div></div>').join(''):'<div class="empty"><h3>Пока пусто</h3><p>Добавьте мебель из каталога или нажмите на пример расчёта справа.</p><button class="button" data-go="catalog">Перейти в каталог ↗</button></div>';
+ '<div class="pricebox"><div class="cart-price" data-row-total="'+p.id+'">'+rub(p.price*state.cart[p.id])+'</div><button type="button" class="remove" data-remove="'+p.id+'">Убрать</button></div></div>').join(''):'<div class="empty"><h3>Пока пусто</h3><p>Добавьте мебель из каталога или нажмите на пример расчёта справа.</p><button class="button" data-go="catalog">Перейти в каталог </button></div>';
  renderCartTotals();
 }
 document.addEventListener('error',e=>{if(e.target instanceof HTMLImageElement){const ph=e.target.closest('.photo');if(ph)ph.classList.add('fault')}},true);
