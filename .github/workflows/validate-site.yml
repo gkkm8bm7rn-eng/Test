@@ -1,0 +1,24 @@
+name: Secret de Maison site quality gate
+on:
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "app.js"
+      - "styles.css"
+      - "assets/products/**"
+      - "scripts/check_site.py"
+      - ".github/workflows/validate-site.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read full published source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Validate JavaScript parser
+        run: node --check app.js
+      - name: Verify brand, photos, palettes and mobile quality invariants
+        run: python3 scripts/check_site.py
