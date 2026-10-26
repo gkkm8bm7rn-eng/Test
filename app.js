@@ -2,8 +2,7 @@
 'use strict';
 const THEMES={
  olive:{paper:'#F4EEDF',primary:'#66705A',second:'#6B3E47',neutral:'#A7A59B',ink:'#2D2623'},
- petrol:{paper:'#F3F1EC',primary:'#4F6A6D',second:'#B5775C',neutral:'#C9B7A2',ink:'#272A2D'},
- nocturne:{paper:'#14262B',primary:'#294C56',second:'#A1644B',neutral:'#595955',ink:'#EDE5DA'}
+ petrol:{paper:'#F3F1EC',primary:'#4F6A6D',second:'#B5775C',neutral:'#C9B7A2',ink:'#272A2D'}
 };
 const PRODUCTS=[
  {id:'24412',name:'Стул Локи / Loki',cat:'Стулья',col:'',mat:'Дерево',price:14780,sku:'24412',dims:'51 × 44 × 86 см',material:'Вяз, ротанг',finish:'Чёрный',photo:'./assets/products/24412.webp',source:'https://secretdemaison.ru/products/stul-loki-modxmscb2895-derevo-vyaz_rotang-51h44h86-sm-chernyiy.html',desc:'Стул с каркасом из вяза и деталями из ротанга. Демонстрация понятной карточки с отделкой, размерами, ценой и количеством.'},
