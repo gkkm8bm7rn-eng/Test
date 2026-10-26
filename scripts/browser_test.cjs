@@ -48,7 +48,7 @@ async function filter(page,key,value){await page.locator(`[data-filter="${key}"]
 async function main(){
  for(const name of engines){
   activeEngine=name;
-  const result=report.engines[name]={checks:[],errors:[],requests:[],screenshots:[]};
+  const result=report.engines[name]={checks:[],errors:[],requests:[],abortedRequests:[],recoveredRequests:[],screenshots:[]};
   let browser,page;
   try{
    browser=await ({chromium,firefox,webkit}[name]).launch({headless:true,executablePath:name==='webkit'?process.env.SDM_WEBKIT_EXECUTABLE||undefined:name==='firefox'?process.env.SDM_FIREFOX_EXECUTABLE||undefined:undefined,args:name==='chromium'?['--no-sandbox']:[]});
@@ -58,7 +58,13 @@ async function main(){
    page.on('pageerror',error=>result.errors.push(error.message));
    page.on('console',message=>{if(message.type()==='error')result.errors.push(message.text());});
    page.on('response',response=>{if(response.status()>=400)result.requests.push({status:response.status(),url:response.url()});});
-   page.on('requestfailed',request=>result.requests.push({url:request.url(),failure:request.failure()}));
+   page.on('requestfailed',request=>{
+    const entry={url:request.url(),failure:request.failure(),resourceType:request.resourceType()};
+    const canceledImage=request.resourceType()==='image'&&/^(NS_BINDING_ABORTED|net::ERR_ABORTED)$/.test(entry.failure?.errorText||'')&&new URL(entry.url).origin===new URL(baseURL).origin;
+    // A route/reload may cancel lazy images. Preserve those events separately;
+    // each URL must subsequently return HTTP200 and decode in a fresh context.
+    (canceledImage?result.abortedRequests:result.requests).push(entry);
+   });
    await page.goto(baseURL,{waitUntil:'networkidle'});await visible(page,'home');
    assert.equal(await page.locator('#site').getAttribute('data-theme'),'petrol');
    assert.deepEqual(await page.locator('.theme-btn').evaluateAll(es=>es.map(e=>e.dataset.theme)),['petrol','olive']);
@@ -194,6 +200,7 @@ async function main(){
    // Large text and landscape remain usable.
    for(const size of [{width:844,height:390},{width:1024,height:768},{width:768,height:1024}]){await page.setViewportSize(size);await nav(page,'catalog');await page.addStyleTag({content:'html {font-size: 24px !important}'});await overflow(page,`${name}/large-text/${size.width}`);}
    result.checks.push('both palettes: all 13 required widths + intermediate widths; home/catalog/PDP/cart; all screens without overflow; phone/tablet/desktop screenshots; landscape and large text');
+   await page.waitForLoadState('networkidle');
    await context.close();
    // Emulated touch sequence tests horizontal gallery change and vertical no-change.
    const mobile=await browser.newContext({viewport:{width:390,height:844},hasTouch:true,isMobile:name!=='firefox'});
@@ -209,6 +216,21 @@ async function main(){
    const slow=await browser.newContext({viewport:{width:390,height:844}});const slowPage=await slow.newPage();
    await slowPage.route('**/*',async route=>{await delay(route.request().resourceType()==='image'?150:75);await route.continue();});
    await slowPage.goto(baseURL,{waitUntil:'networkidle'});await visible(slowPage,'home');await nav(slowPage,'catalog');await checkImages(slowPage);await slow.close();result.checks.push('clean session with resource latency and lazy image loading');
+   if(result.abortedRequests.length){
+    const recovery=await browser.newContext();const recoveryPage=await recovery.newPage();
+    for(const url of [...new Set(result.abortedRequests.map(entry=>entry.url))]){
+     const retry=new URL(url);retry.searchParams.set('qa-recover',String(Date.now()));
+     const responsePromise=recoveryPage.waitForResponse(response=>response.url()===retry.href,{timeout:30000});
+     const [response,dimensions]=await Promise.all([responsePromise,recoveryPage.evaluate(src=>new Promise((resolve,reject)=>{
+      const image=new Image();const timer=setTimeout(()=>reject(new Error('Recovery image load timeout '+src)),25000);
+      image.onload=async()=>{try{await image.decode();clearTimeout(timer);resolve({width:image.naturalWidth,height:image.naturalHeight});}catch(error){clearTimeout(timer);reject(error);}};
+      image.onerror=()=>{clearTimeout(timer);reject(new Error('Recovery image failed '+src));};image.src=src;
+     }),retry.href)]);
+     assert.equal(response.status(),200,'Canceled image URL must reload with HTTP200');assert.ok(dimensions.width>100&&dimensions.height>100,'Canceled image must decode');
+     result.recoveredRequests.push({url,retryURL:retry.href,status:response.status(),...dimensions,recovered:true});
+    }
+    await recovery.close();result.checks.push('canceled lazy image requests retained and independently recovered with HTTP200 plus browser decode');
+   }
    assert.deepEqual(result.errors,[],'No console/page errors');assert.deepEqual(result.requests,[],'No broken requests');
    fs.rmSync(path.join(output,name+'-failure.png'),{force:true});
    result.screenshots=fs.readdirSync(output).filter(file=>file.startsWith(name+'-')&&file.endsWith('.png'));

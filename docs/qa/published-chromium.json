@@ -1,0 +1,64 @@
+{
+  "baseURL": "https://gkkm8bm7rn-eng.github.io/Test/",
+  "startedAt": "2026-10-26T14:36:18.113Z",
+  "physicalDevices": false,
+  "engines": {
+    "chromium": {
+      "checks": [
+        "skip link preserves route and focuses main; clean session, default petrol, theme order, initial JS execution",
+        "both themes persist; menus, logo, distinct editorial routes; no theme click interception",
+        "name/photo links and hero catalog CTA; 20 distinct official SKU cards, source-data image mapping and loaded photographs",
+        "category/subcategory/material intersection, empty state, reset, price sorting, hash reload and browser back/forward",
+        "all 20 product pages, matching SKU/main frame, real gallery arrows and keyboard, no false single-frame controls",
+        "basket demo empty-to-row and input sync, basket-to-product return, two SKU basket, manual quantity 1-to-2 updates line/total/badge, +/- controls and reload persistence",
+        "legacy olive migration, preserved basket, conscious theme persistence",
+        "both palettes: all 13 required widths + intermediate widths; home/catalog/PDP/cart; all screens without overflow; phone/tablet/desktop screenshots; landscape and large text",
+        "emulated touch swipe changes image; vertical gesture leaves gallery unchanged",
+        "clean session with resource latency and lazy image loading"
+      ],
+      "errors": [],
+      "requests": [],
+      "screenshots": [
+        "chromium-olive-1440-cart.png",
+        "chromium-olive-1440-catalog.png",
+        "chromium-olive-1440-gallery.png",
+        "chromium-olive-1440-home.png",
+        "chromium-olive-1440-product.png",
+        "chromium-olive-390-cart.png",
+        "chromium-olive-390-catalog.png",
+        "chromium-olive-390-gallery.png",
+        "chromium-olive-390-home.png",
+        "chromium-olive-390-product.png",
+        "chromium-olive-820-cart.png",
+        "chromium-olive-820-catalog.png",
+        "chromium-olive-820-gallery.png",
+        "chromium-olive-820-home.png",
+        "chromium-olive-820-product.png",
+        "chromium-petrol-1440-cart.png",
+        "chromium-petrol-1440-catalog.png",
+        "chromium-petrol-1440-gallery.png",
+        "chromium-petrol-1440-home.png",
+        "chromium-petrol-1440-product.png",
+        "chromium-petrol-390-cart.png",
+        "chromium-petrol-390-catalog.png",
+        "chromium-petrol-390-gallery.png",
+        "chromium-petrol-390-home.png",
+        "chromium-petrol-390-product.png",
+        "chromium-petrol-820-cart.png",
+        "chromium-petrol-820-catalog.png",
+        "chromium-petrol-820-gallery.png",
+        "chromium-petrol-820-home.png",
+        "chromium-petrol-820-product.png"
+      ],
+      "version": "151.0.7922.34",
+      "actionPacingMs": 0,
+      "step": {
+        "palette": "olive",
+        "width": 2560,
+        "view": "cart"
+      },
+      "status": "PASS"
+    }
+  },
+  "finishedAt": "2026-10-26T14:38:33.184Z"
+}

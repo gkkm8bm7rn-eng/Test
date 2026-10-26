@@ -1,0 +1,114 @@
+{
+  "baseURL": "https://gkkm8bm7rn-eng.github.io/Test/",
+  "startedAt": "2026-10-26T14:42:16.237Z",
+  "physicalDevices": false,
+  "engines": {
+    "firefox": {
+      "checks": [
+        "skip link preserves route and focuses main; clean session, default petrol, theme order, initial JS execution",
+        "both themes persist; menus, logo, distinct editorial routes; no theme click interception",
+        "name/photo links and hero catalog CTA; 20 distinct official SKU cards, source-data image mapping and loaded photographs",
+        "category/subcategory/material intersection, empty state, reset, price sorting, hash reload and browser back/forward",
+        "all 20 product pages, matching SKU/main frame, real gallery arrows and keyboard, no false single-frame controls",
+        "basket demo empty-to-row and input sync, basket-to-product return, two SKU basket, manual quantity 1-to-2 updates line/total/badge, +/- controls and reload persistence",
+        "legacy olive migration, preserved basket, conscious theme persistence",
+        "both palettes: all 13 required widths + intermediate widths; home/catalog/PDP/cart; all screens without overflow; phone/tablet/desktop screenshots; landscape and large text",
+        "emulated touch swipe changes image; vertical gesture leaves gallery unchanged",
+        "clean session with resource latency and lazy image loading",
+        "canceled lazy image requests retained and independently recovered with HTTP200 plus browser decode"
+      ],
+      "errors": [],
+      "requests": [],
+      "abortedRequests": [
+        {
+          "url": "https://gkkm8bm7rn-eng.github.io/Test/assets/products/verified/14318-1.webp",
+          "failure": {
+            "errorText": "NS_BINDING_ABORTED"
+          },
+          "resourceType": "image"
+        },
+        {
+          "url": "https://gkkm8bm7rn-eng.github.io/Test/assets/products/verified/20606-1.webp",
+          "failure": {
+            "errorText": "NS_BINDING_ABORTED"
+          },
+          "resourceType": "image"
+        },
+        {
+          "url": "https://gkkm8bm7rn-eng.github.io/Test/assets/products/verified/20462-1.webp",
+          "failure": {
+            "errorText": "NS_BINDING_ABORTED"
+          },
+          "resourceType": "image"
+        }
+      ],
+      "recoveredRequests": [
+        {
+          "url": "https://gkkm8bm7rn-eng.github.io/Test/assets/products/verified/14318-1.webp",
+          "retryURL": "https://gkkm8bm7rn-eng.github.io/Test/assets/products/verified/14318-1.webp?qa-recover=1793025879226",
+          "status": 200,
+          "width": 1300,
+          "height": 1300,
+          "recovered": true
+        },
+        {
+          "url": "https://gkkm8bm7rn-eng.github.io/Test/assets/products/verified/20606-1.webp",
+          "retryURL": "https://gkkm8bm7rn-eng.github.io/Test/assets/products/verified/20606-1.webp?qa-recover=1793025879452",
+          "status": 200,
+          "width": 1300,
+          "height": 1300,
+          "recovered": true
+        },
+        {
+          "url": "https://gkkm8bm7rn-eng.github.io/Test/assets/products/verified/20462-1.webp",
+          "retryURL": "https://gkkm8bm7rn-eng.github.io/Test/assets/products/verified/20462-1.webp?qa-recover=1793025879612",
+          "status": 200,
+          "width": 1300,
+          "height": 1300,
+          "recovered": true
+        }
+      ],
+      "screenshots": [
+        "firefox-olive-1440-cart.png",
+        "firefox-olive-1440-catalog.png",
+        "firefox-olive-1440-gallery.png",
+        "firefox-olive-1440-home.png",
+        "firefox-olive-1440-product.png",
+        "firefox-olive-390-cart.png",
+        "firefox-olive-390-catalog.png",
+        "firefox-olive-390-gallery.png",
+        "firefox-olive-390-home.png",
+        "firefox-olive-390-product.png",
+        "firefox-olive-820-cart.png",
+        "firefox-olive-820-catalog.png",
+        "firefox-olive-820-gallery.png",
+        "firefox-olive-820-home.png",
+        "firefox-olive-820-product.png",
+        "firefox-petrol-1440-cart.png",
+        "firefox-petrol-1440-catalog.png",
+        "firefox-petrol-1440-gallery.png",
+        "firefox-petrol-1440-home.png",
+        "firefox-petrol-1440-product.png",
+        "firefox-petrol-390-cart.png",
+        "firefox-petrol-390-catalog.png",
+        "firefox-petrol-390-gallery.png",
+        "firefox-petrol-390-home.png",
+        "firefox-petrol-390-product.png",
+        "firefox-petrol-820-cart.png",
+        "firefox-petrol-820-catalog.png",
+        "firefox-petrol-820-gallery.png",
+        "firefox-petrol-820-home.png",
+        "firefox-petrol-820-product.png"
+      ],
+      "version": "153.0",
+      "actionPacingMs": 0,
+      "step": {
+        "palette": "olive",
+        "width": 2560,
+        "view": "cart"
+      },
+      "status": "PASS"
+    }
+  },
+  "finishedAt": "2026-10-26T14:44:40.075Z"
+}
