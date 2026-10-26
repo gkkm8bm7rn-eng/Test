@@ -8,6 +8,7 @@ on:
       - "styles.css"
       - "assets/products/**"
       - "scripts/check_site.py"
+      - "scripts/smoke_dom.cjs"
       - ".github/workflows/validate-site.yml"
   workflow_dispatch:
 permissions:
@@ -22,3 +23,7 @@ jobs:
         run: node --check app.js
       - name: Verify brand, photos, palettes and mobile quality invariants
         run: python3 scripts/check_site.py
+      - name: Verify interactive navigation, filters, product page and cart
+        run: |
+          npm install --no-save --no-package-lock jsdom@24
+          node scripts/smoke_dom.cjs
