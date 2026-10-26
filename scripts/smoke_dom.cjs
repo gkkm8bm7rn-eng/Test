@@ -70,7 +70,9 @@ assert.equal(window.location.hash,initialRoute,'Quick add cannot open product or
 assert.equal(find('#site').dataset.theme,initialTheme,'Quick add cannot change theme');
 assert.equal(find('#cartBadge').textContent,'1');
 copies(first.id,1);
-assert.equal(document.activeElement.dataset.cardInput,first.id,'Add preserves keyboard focus on the revealed quantity');
+assert.equal(document.activeElement.dataset.cardStep,first.id,'Add moves focus to the revealed plus button');
+assert.equal(document.activeElement.dataset.delta,'1','Focused control increases quantity without opening a mobile number keyboard');
+assert.equal(document.activeElement.matches('[data-card-input]'),false,'Quick add does not automatically focus a number input');
 assert.ok(document.querySelector(`#featuredGrid [data-card-input="${first.id}"]`),'Home card shares catalog quantity');
 click(`#catalogGrid [data-card-step="${first.id}"][data-delta="1"]`);
 copies(first.id,2);

@@ -51,8 +51,8 @@ async function run(engine){
    await nav('cart');while(await page.locator('[data-remove]').count())await page.locator('[data-remove]').first().click();
    await catalog();const url=page.url();
    await add(primary.id).click();await samePage(url,palette);await copies(primary.id,1);assert.equal(await page.locator('#cartBadge').textContent(),'1');
-   assert.equal(await page.evaluate(()=>document.activeElement?.dataset.cardInput),primary.id,'Adding keeps focus on the new quantity input');
-   await step(primary.id,1).click();await copies(primary.id,2);
+   assert.deepEqual(await page.evaluate(()=>({id:document.activeElement?.dataset.cardStep,delta:document.activeElement?.dataset.delta,isInput:document.activeElement?.matches('input')})),{id:primary.id,delta:'1',isInput:false},'Adding focuses plus without opening numeric input');
+   await page.keyboard.press('Enter');await copies(primary.id,2);
    await input(primary.id).fill('3');await copies(primary.id,3);assert.equal(await page.locator('#cartBadge').textContent(),'3');
    // The click blurs the input. It must still reach the plus button exactly once.
    await step(primary.id,1).click();await copies(primary.id,4);await samePage(url,palette);
@@ -62,7 +62,7 @@ async function run(engine){
    assert.equal(await page.evaluate(()=>document.activeElement?.dataset.cardAdd),primary.id,'Removing the last unit restores focus to add');
    await add(primary.id).dblclick({delay:40});await copies(primary.id,1);
    await step(primary.id,-1).dblclick({delay:40});await copies(primary.id,0);assert.ok(await add(primary.id).isVisible(),'Fast minus at one must not re-add the item');
-   result.checks.push(`${palette}: add without navigation/theme interception, plus, manual 3, blur plus, fast plus/add/minus double clicks, decrement-to-zero and focus`);
+   result.checks.push(`${palette}: add without navigation/theme interception, plus, manual 3, blur plus, keyboard Enter on plus, fast plus/add/minus double clicks, decrement-to-zero and focus`);
    await add(primary.id).click();
    await page.locator('.logo').first().click();await shown('home');await copies(primary.id,1);
    await step(primary.id,1,'#featuredGrid').click();await copies(primary.id,2);

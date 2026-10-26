@@ -284,7 +284,8 @@ function syncCardCart(id) {
   if(input!==focused)input.value=String(qty||1);
   $('[data-delta="1"]',card).disabled=qty>=999;
   $('[data-delta="-1"]',card).setAttribute('aria-label',(qty===1?'Удалить из корзины: ':'Уменьшить количество: ')+p.name);
-  if(moveToQuantity)input.focus({preventScroll:true});
+  // Keep the action ready for the keyboard without opening a phone's number pad.
+  if(moveToQuantity)$('[data-delta="1"]',card).focus({preventScroll:true});
   else if(moveToAdd)add.focus({preventScroll:true});
  });
 }
