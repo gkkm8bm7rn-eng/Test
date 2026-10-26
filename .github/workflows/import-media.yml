@@ -1,4 +1,4 @@
-name: Import verified Secret de Maison photos
+name: Validate or restore manifest-verified official photos
 on:
   push:
     branches: [main]

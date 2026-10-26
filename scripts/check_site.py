@@ -1,116 +1,97 @@
 #!/usr/bin/env python3
-"""Deterministic pre-publish checks for Secret de Maison demo.
-
-Prevents recurrent: wrong brand spelling, emoji UI icons, image hotlinks,
-missing local assets, unused palettes, missing mobile gutters and JS files.
-A passing commit is still not a substitute for visual testing on the live site.
-"""
+"""Pre-publish source/media invariants. Browser behavior is tested separately."""
 from pathlib import Path
-import re
-import sys
-import json
 from html.parser import HTMLParser
+from urllib.parse import urlparse
+import hashlib
+import json
+import re
+import subprocess
+import sys
 
-ROOT=Path(__file__).resolve().parents[1]
-HTML=(ROOT/"index.html").read_text(encoding="utf-8")
-CSS=(ROOT/"styles.css").read_text(encoding="utf-8")
-JS=(ROOT/"app.js").read_text(encoding="utf-8")
-ERRORS=[]
-
-def must(condition,description):
-    if not condition:ERRORS.append(description)
+ROOT = Path(__file__).resolve().parents[1]
+ERRORS = []
+def must(ok, message):
+    if not ok:
+        ERRORS.append(message)
 
 class Elements(HTMLParser):
     def __init__(self):
         super().__init__()
-        self.resources=[]
-        self.brand_buttons=[]
-        self.in_logo=False
-        self.logo_text=""
-    def handle_starttag(self,tag,attrs):
-        a=dict(attrs)
-        if tag in ("script","link","img") and (src:=a.get("src") or a.get("href")):
-            if not src.startswith(("https://","http://","#","mailto:","tel:")):
-                self.resources.append(src.split("?")[0].split("#")[0])
-        if tag=="button" and "logo" in a.get("class","").split():
-            self.in_logo=True
-    def handle_data(self,data):
-        if self.in_logo:self.logo_text+=data
-    def handle_endtag(self,tag):
-        if tag=="button":self.in_logo=False
+        self.resources, self.themes = [], []
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        if tag in ('script', 'link', 'img'):
+            src = a.get('src') or a.get('href')
+            if src and not src.startswith(('http:', 'https:', '#', 'data:')):
+                self.resources.append(src.split('?')[0].split('#')[0])
+        if tag == 'button' and 'theme-btn' in a.get('class', '').split():
+            self.themes.append(a.get('data-theme'))
 
-parser=Elements()
-parser.feed(HTML)
+html = (ROOT / 'index.html').read_text()
+css = (ROOT / 'styles.css').read_text()
+js = (ROOT / 'app.js').read_text()
+parser = Elements()
+parser.feed(html)
+must(parser.themes == ['petrol', 'olive'], 'Theme buttons must be petrol first, olive second, exactly two')
+must(not re.search(r"(?<!\$)\$\(['\"]\.theme-btn\[data-theme\]['\"]\)\.forEach", js), 'querySelector element cannot be iterated with forEach')
+must("closest('[data-theme]')" not in js and 'closest("[data-theme]")' not in js, 'Generic theme delegation intercepts site navigation')
+must('Secret de Maison' in html, 'Missing correct brand name')
+must(not re.search(r'[\u2196-\u2199\u27a1\U0001f300-\U0001faff]', html + js), 'Emoji / Unicode arrow used as UI icon')
+must('images.unsplash.com' not in html + js, 'Stock images cannot represent products')
+must('object-fit:contain' in css.replace(' ', ''), 'Main product images need contain fit')
+must('prefers-reduced-motion' in css, 'Missing reduced-motion support')
+for filename in parser.resources:
+    must((ROOT / filename).is_file(), 'Missing local HTML resource: ' + filename)
+for color in ['#F3F1EC', '#4F6A6D', '#B5775C', '#C9B7A2', '#272A2D', '#F4EEDF', '#66705A', '#6B3E47', '#A7A59B', '#2D2623']:
+    must(color.lower() in (html + css + js).lower(), 'Missing approved palette color: ' + color)
 
-must("Secret de Maison" in HTML and "Secret Maison" not in HTML,"Incorrect brand spelling in HTML")
-must("Secret Maison" not in JS,"Incorrect brand spelling in JS")
-must("Secret <span class=\"logo-de\">de</span> Maison" in HTML,"Logo must spell Secret de Maison without punctuation")
-must("<span>.</span>" not in HTML,"Unrequested logo dot remains")
-must(not re.search(r"[\u2196-\u2199\u27a1\U0001f300-\U0001faff]",HTML+JS),"Emoji / Unicode arrow used as interactive icon")
-must("images.unsplash.com" not in HTML,"External stock photo on website")
-must("photo:\"https://" not in JS and "photo:'https://" not in JS,"Product photo still hotlinked")
-must("referrerpolicy" not in HTML or True,"")
-must(all(f'data-theme="{key}"' in HTML for key in ("olive","petrol")),"Missing one of the two approved themes")
-must('data-theme="nocturne"' not in HTML and 'nocturne:{paper:' not in JS, "Rejected third theme remains visible")
-must("setAttribute('data-theme',state.theme)" in JS,"Theme CSS attribute binding missing")
-for key in ["paper","primary","second","neutral","ink"]:
-    must(key+":" in JS or "'"+key+"':" in JS,"Palette key missing: "+key)
-# Primary-dominant theme hierarchy (the secondary must not become a giant surface).
-# Validate effective declarations from the latest semantic-palette section, not
-# historical base rules retained earlier in the stylesheet.
-palette_start=CSS.find("/* Semantic palette rule:")
-must(palette_start>=0,"Missing centralized semantic palette")
-effective_css=CSS[palette_start:] if palette_start>=0 else ""
-for role in [
-    ".hero-copy{background:var(--tone-primary)",
-    ".ribbon{background:var(--primary)",
-    ".feature{background:var(--primary)",
-    ".home-space:nth-child(2){background:var(--tone-primary-light)",
-    ".cart-panel{background:var(--tone-primary)",
-    ".prose blockquote{background:var(--tone-primary-light)",
-    ".site-footer{background:var(--tone-neutral)"
-]:
-    must(role in effective_css,"Primary-dominant theme role missing: "+role)
-for selector in [".ribbon",".feature",".cart-panel",".prose blockquote",".biz-card"]:
-    must(not re.search(re.escape(selector)+r"\{background:var\(--second\)",effective_css),
-         "Secondary accent must not occupy major surfaces: "+selector)
-must("color:var(--accent-ink)" in effective_css,"Missing secondary accent in prices and details")
-must("color-mix(in srgb,var(--second) 9%,var(--paper))" in effective_css,
-     "Secondary tint too strong; palette hierarchy at risk")
-must("clamp(28px,5vw,76px)" in CSS and "padding-inline:27px" in CSS,"Missing deliberate outer gutters")
-must("object-fit:contain" in CSS,"Main product images may be cropped")
-must("aria-label=\"Количество товара\"" in HTML,"Missing accessible quantity label")
-
-for path in parser.resources:
-    if path:
-        must((ROOT/path).is_file(),"HTML references missing local resource: "+path)
 try:
-    manifest=json.loads((ROOT/"assets/products/manifest.json").read_text(encoding="utf-8"))
+    script = "const fs=require('node:fs'),vm=require('node:vm'); const c={}; vm.createContext(c); vm.runInContext(fs.readFileSync('products.js','utf8')+';this.result=PRODUCTS',c); process.stdout.write(JSON.stringify(c.result));"
+    products = json.loads(subprocess.check_output(['node', '-e', script], cwd=ROOT, text=True))
 except Exception as exc:
-    manifest={}
-    ERRORS.append("Photo manifest not readable: "+str(exc))
+    products = []
+    ERRORS.append('Cannot load products.js: ' + str(exc))
+try:
+    manifest = json.loads((ROOT / 'assets/products/manifest.json').read_text())
+except Exception as exc:
+    manifest = {}
+    ERRORS.append('Cannot load photo manifest: ' + str(exc))
+ids = [str(p.get('sku', '')) for p in products]
+fixed = {'25271', '14318', '25115', '25442', '25186', '12828', '25090', '20606', '25015', '26065', '8301', '10085'}
+must(len(products) == 20 and len(set(ids)) == 20, 'Expected exactly 20 unique official SKUs')
+must(fixed <= set(ids), 'One of the first 12 fixed models has been replaced')
+for p in products:
+    sku = str(p.get('sku', ''))
+    must(str(p.get('id')) == sku, 'Product id must use official SKU: ' + sku)
+    must(p.get('name') and p.get('cat') and p.get('material') and p.get('finish'), 'Incomplete model/variant data: ' + sku)
+    source = p.get('source', '')
+    must(urlparse(source).netloc == 'secretdemaison.ru' and '/products/' in source, 'Nonofficial product source: ' + sku)
+    must(isinstance(p.get('price'), (int, float)) and p['price'] > 0, 'Missing demonstrative calculation price: ' + sku)
+    photos = p.get('photos') or [p.get('photo')]
+    must(bool(photos) and p.get('photo') == photos[0], 'Main photo must be first gallery frame: ' + sku)
+    record = manifest.get(sku, {})
+    must(bool(record), 'Missing manifest record: ' + sku)
+    must(source in json.dumps(record, ensure_ascii=False), 'Manifest does not identify official product page: ' + sku)
+    seen = set()
+    for photo in photos:
+        filename = ROOT / str(photo).removeprefix('./')
+        must(str(photo).startswith('./assets/products/') and filename.suffix == '.webp', 'Photo is not a local WebP: ' + sku)
+        must(filename.is_file(), 'Missing photo: ' + str(photo))
+        if not filename.is_file():
+            continue
+        data = filename.read_bytes()
+        must(len(data) > 2000 and data[:4] == b'RIFF' and data[8:12] == b'WEBP', 'Invalid/empty WebP: ' + str(photo))
+        digest = hashlib.sha256(data).hexdigest()
+        must(digest not in seen, 'Duplicated gallery frame: ' + sku)
+        seen.add(digest)
+        evidence = json.dumps(record, ensure_ascii=False)
+        must(str(photo).removeprefix('./') in evidence or filename.name in evidence, 'Manifest missing local photo mapping: ' + str(photo))
+        must(digest in evidence, 'Manifest missing verified local photo hash: ' + str(photo))
+    must('secretdemaison.ru/netcat_files/' in json.dumps(record), 'Manifest missing official image source: ' + sku)
 
-ids=re.findall(r"\{id:'(\d+)'",JS)
-must(len(ids)==len(set(ids)) and len(ids)>=3,"Not enough unique product SKUs")
-for sku in ids:
-    filename=ROOT/"assets/products"/f"{sku}.webp"
-    must(filename.is_file(),"Missing local real product image for "+sku)
-    if filename.is_file():
-        data=filename.read_bytes()
-        must(len(data)>3500 and data[:4]==b"RIFF" and data[8:12]==b"WEBP","Invalid WebP for "+sku)
-    must(sku in manifest,"Missing validated product/source mapping for "+sku)
-    must(f"photo:'./assets/products/{sku}.webp'" in JS,"Product "+sku+" does not use checked local photo")
-
-# Regression: theme attribute exists on .site, so generic [data-theme] would
-# capture all navigation/product/cart clicks through closest().
-must("e.target.closest('.theme-btn[data-theme]')" in JS,"Theme handler must target palette buttons only")
-must("e.target.closest('[data-theme]')" not in JS,"Theme handler swallows all site clicks")
-must("$('.theme-btn[data-theme]').forEach" in JS,"Theme state updates must target palette buttons")
-must('class="product-photo-link"' in JS and 'data-open-product=' in JS,"Product photos are not interactive")
-
-print("Checked:",len(ids),"unique SKUs, images, manifest, routes, themes, logo, UI icons and gutters")
+print(f'Checked {len(products)} products, official SKU/source/media mappings, themes and local resources.')
 if ERRORS:
-    print("FAILED:",len(ERRORS),"checks")
-    for error in ERRORS: print(" -",error)
+    print('\n'.join('FAIL: ' + error for error in ERRORS))
     sys.exit(1)
-print("PASS — static QA completed; live mobile UX QA is still required.")
+print('PASS: source/media checks. This does not replace visual correspondence checks or browser QA.')

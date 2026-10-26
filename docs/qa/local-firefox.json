@@ -1,0 +1,27 @@
+{
+  "baseURL": "http://127.0.0.1:8765/",
+  "startedAt": "2026-10-26T14:22:47.440Z",
+  "physicalDevices": false,
+  "engines": {
+    "firefox": {
+      "checks": [
+        "skip link preserves route and focuses main; clean session, default petrol, theme order, initial JS execution",
+        "both themes persist; menus, logo, distinct editorial routes; no theme click interception",
+        "name/photo links and hero catalog CTA; 20 distinct official SKU cards, source-data image mapping and loaded photographs",
+        "category/subcategory/material intersection, empty state, reset, price sorting, hash reload and browser back/forward",
+        "all 20 product pages, matching SKU/main frame, real gallery arrows and keyboard, no false single-frame controls",
+        "two SKU basket, manual quantity 1-to-2 updates line/total/badge, +/- controls and reload persistence",
+        "legacy olive migration, preserved basket, conscious theme persistence",
+        "both palettes: all 13 required widths + intermediate widths; home/catalog/PDP/cart; all screens without overflow; phone/tablet/desktop screenshots; landscape and large text",
+        "emulated touch swipe changes image; vertical gesture leaves gallery unchanged",
+        "clean session with resource latency and lazy image loading"
+      ],
+      "errors": [],
+      "requests": [],
+      "screenshots": [],
+      "version": "153.0",
+      "status": "PASS"
+    }
+  },
+  "finishedAt": "2026-10-26T14:24:44.723Z"
+}
