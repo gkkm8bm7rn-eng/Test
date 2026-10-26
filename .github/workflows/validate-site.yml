@@ -44,6 +44,10 @@ jobs:
           node scripts/browser_test.cjs --base-url http://127.0.0.1:8765/ --screenshots --output /tmp/sdm-browser-qa
       - name: Direct card purchase and quantity regression
         run: node scripts/card_cart_browser.cjs --base-url http://127.0.0.1:8765/ --screenshots --output /tmp/sdm-card-cart-qa
+      - name: Product card row alignment and text scaling
+        run: node scripts/card_layout_browser.cjs --base-url http://127.0.0.1:8765/ --screenshots --output /tmp/sdm-card-layout-qa
+      - name: Legacy card alignment fallback and font metrics
+        run: node scripts/card_layout_browser.cjs --base-url http://127.0.0.1:8765/ --engines chromium,webkit --widths 390,820 --force-fallback --output /tmp/sdm-card-layout-fallback-qa
       - name: Preserve browser reports and screenshots
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -52,4 +56,6 @@ jobs:
           path: |
             /tmp/sdm-browser-qa/
             /tmp/sdm-card-cart-qa/
+            /tmp/sdm-card-layout-qa/
+            /tmp/sdm-card-layout-fallback-qa/
           retention-days: 14

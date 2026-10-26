@@ -8,7 +8,8 @@
     "test:dom": "node scripts/smoke_dom.cjs",
     "test:browser": "node scripts/browser_test.cjs",
     "test": "npm run check && npm run test:dom",
-    "test:cards": "node scripts/card_cart_browser.cjs"
+    "test:cards": "node scripts/card_cart_browser.cjs",
+    "test:layout": "node scripts/card_layout_browser.cjs"
   },
   "devDependencies": {
     "jsdom": "24.1.3",

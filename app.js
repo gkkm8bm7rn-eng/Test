@@ -6,6 +6,85 @@ const THEMES = {
 };
 const $ = (selector, root=document) => root.querySelector(selector);
 const $$ = (selector, root=document) => Array.from(root.querySelectorAll(selector));
+/* Older engines keep natural text flow, then share each visual row's six slot
+ * minima. Modern engines use CSS subgrid and never receive inline sizing. */
+const scheduleCardRows = (() => {
+ if(window.CSS && typeof window.CSS.supports==='function' && window.CSS.supports('grid-template-rows','subgrid'))return ()=>{};
+ const originals=new WeakMap(),sizes=new WeakMap(),observed=new Set();
+ const requestFrame=window.requestAnimationFrame ? window.requestAnimationFrame.bind(window) : callback=>window.setTimeout(callback,0);
+ let pending=false,observer;
+ function bounds(element){const rect=element.getBoundingClientRect();return {width:rect.width,height:rect.height};}
+ function watch(element){if(observer&&!observed.has(element)){observed.add(element);observer.observe(element);}}
+ function restoreMinimum(slot) {
+  const previous=originals.get(slot);
+  if(!previous)return;
+  if(previous.value)slot.style.setProperty('min-height',previous.value,previous.priority);
+  else slot.style.removeProperty('min-height');
+ }
+ function measureNaturalText(card) {
+  // An outer slot's old minimum can conceal shrinking text. Intrinsic inner
+  // spans remain unconstrained, so font resizing/family swaps are observable.
+  [card.children[2],card.children[3],card.children[4]].forEach(slot=>{
+   let probe=slot.firstElementChild;
+   if(!probe||!probe.hasAttribute('data-card-natural')){
+    probe=document.createElement('span');probe.setAttribute('data-card-natural','');
+    probe.style.cssText='display:block;min-width:0;max-width:100%;flex:1 1 auto';
+    while(slot.firstChild)probe.appendChild(slot.firstChild);
+    slot.appendChild(probe);
+   }
+   watch(probe);
+  });
+  $$('.category-pill,.card-add,.card-stepper',card).forEach(watch);
+ }
+ function alignRows() {
+  pending=false;
+  if(observer)observed.forEach(element=>{if(!element.isConnected){observer.unobserve(element);observed.delete(element);}});
+  const grids=$$('.product-grid').filter(grid=>grid.getClientRects().length>0);
+  const groups=grids.map(grid=>({grid,cards:Array.from(grid.children).filter(card=>card.classList.contains('product-card')&&card.children.length===6&&card.getClientRects().length>0)}));
+  groups.forEach(({cards})=>cards.forEach(measureNaturalText));
+  // Remove only this fallback's previous constraints before measuring natural
+  // heights, so narrower columns or shorter labels can both grow and shrink.
+  groups.forEach(({cards})=>cards.forEach(card=>Array.from(card.children).forEach(restoreMinimum)));
+  const rows=[];
+  groups.forEach(({grid,cards})=>{
+   const gridRows=[];
+   cards.forEach(card=>{
+    const top=card.getBoundingClientRect().top;
+    let row=gridRows.find(candidate=>Math.abs(candidate.top-top)<2);
+    if(!row){row={top,cards:[],heights:Array(6).fill(0)};gridRows.push(row);}
+    const slots=Array.from(card.children);
+    row.cards.push(slots);
+    slots.forEach((slot,index)=>{row.heights[index]=Math.max(row.heights[index],slot.getBoundingClientRect().height);});
+   });
+   if(cards.length)grid.dataset.cardRowFallback='true';
+   rows.push(...gridRows);
+  });
+  // These are minima, never fixed heights: full content remains visible.
+  rows.forEach(row=>row.cards.forEach(slots=>slots.forEach((slot,index)=>{
+   if(!originals.has(slot))originals.set(slot,{value:slot.style.getPropertyValue('min-height'),priority:slot.style.getPropertyPriority('min-height')});
+   slot.style.setProperty('min-height',Math.ceil(row.heights[index]*100)/100+'px');
+  })));
+  // Snapshot after our writes: their ResizeObserver notifications are ignored,
+  // while independent width or intrinsic font-metric changes schedule a pass.
+  observed.forEach(element=>sizes.set(element,bounds(element)));
+ }
+ function schedule(){if(!pending){pending=true;requestFrame(alignRows);}}
+ if(typeof window.ResizeObserver==='function') {
+  observer=new ResizeObserver(entries=>{
+   let changed=false;
+   entries.forEach(({target})=>{
+    const current=bounds(target),previous=sizes.get(target);
+    if(!previous||Math.abs(previous.width-current.width)>.02||Math.abs(previous.height-current.height)>.02){sizes.set(target,current);changed=true;}
+   });
+   if(changed)schedule();
+  });
+  $$('.product-grid').forEach(watch);
+ }
+ window.addEventListener('resize',schedule,{passive:true});
+ if(document.fonts){document.fonts.ready.then(schedule);document.fonts.addEventListener?.('loadingdone',schedule);}
+ document.addEventListener('load',event=>{if(event.target instanceof HTMLImageElement&&event.target.closest('.product-grid'))schedule();},true);
+ return schedule;
+})();
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const rub = n => new Intl.NumberFormat('ru-RU').format(Number(n)||0)+' ₽';
 function itemCount(n) {
@@ -74,6 +153,7 @@ function productCard(p) {
 function cardsTo(selector,list) {
  const target = $(selector); if (!target) return;
  target.innerHTML = list.length ? list.map(productCard).join('') : '<div class="empty" role="status"><h3>Ничего не найдено</h3><p>В этой подборке нет товаров с таким сочетанием параметров.</p><button type="button" class="linkish" data-reset="filters">Сбросить фильтры</button></div>';
+ scheduleCardRows();
 }
 function route(view, values={}) {
  const params = new URLSearchParams();
@@ -161,6 +241,7 @@ function readRoute() {
  if(view==='cart')renderCart();
  const titles={home:'Secret de Maison',catalog:'Каталог',categories:'Категории',category:state.cat,collections:'Редакционные подборки',product:PRODUCTS.find(p=>p.id===state.chosen)?.name,journal:'Журнал',concept:'Идея',cart:'Корзина'};
  document.title=titles[view]+' · Secret de Maison · демонстрация';
+ scheduleCardRows();
 }
 window.addEventListener('popstate',()=>{
  const previousView=state.view;readRoute();if(previousView!==state.view)focusSection(); window.scrollTo({top:Number(history.state?.scroll)||0,behavior:'instant'});
@@ -288,6 +369,7 @@ function syncCardCart(id) {
   if(moveToQuantity)$('[data-delta="1"]',card).focus({preventScroll:true});
   else if(moveToAdd)add.focus({preventScroll:true});
  });
+ scheduleCardRows();
 }
 function announceCardCart(id) {
  const p=PRODUCTS.find(product=>product.id===id),status=$('#cartFeedback');
