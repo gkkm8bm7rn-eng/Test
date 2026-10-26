@@ -42,10 +42,14 @@ jobs:
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/sdm-http.log 2>&1 &
           node scripts/browser_test.cjs --base-url http://127.0.0.1:8765/ --screenshots --output /tmp/sdm-browser-qa
+      - name: Direct card purchase and quantity regression
+        run: node scripts/card_cart_browser.cjs --base-url http://127.0.0.1:8765/ --screenshots --output /tmp/sdm-card-cart-qa
       - name: Preserve browser reports and screenshots
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: browser-qa
-          path: /tmp/sdm-browser-qa/
+          path: |
+            /tmp/sdm-browser-qa/
+            /tmp/sdm-card-cart-qa/
           retention-days: 14

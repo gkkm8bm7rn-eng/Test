@@ -55,12 +55,21 @@ function categoryPill(p, sub=false) {
  const label = sub ? p.sub : p.cat;
  return label ? '<button type="button" class="category-pill" data-browse-cat="'+escapeHTML(p.cat)+'"'+(sub?' data-browse-sub="'+escapeHTML(p.sub)+'"':'')+'>'+escapeHTML(label)+'</button>' : '';
 }
+function cardCart(p) {
+ const qty=state.cart[p.id]||0,id=escapeHTML(p.id),name=escapeHTML(p.name);
+ return '<div class="card-cart" data-card-cart="'+id+'">'+
+ '<button type="button" class="button card-add" data-card-add="'+id+'" aria-label="Добавить '+name+' в демо-корзину"'+(qty?' hidden':'')+'>В корзину</button>'+
+ '<div class="stepper card-stepper" role="group" aria-label="Количество в корзине: '+name+'"'+(qty?'':' hidden')+'>'+
+ '<button type="button" data-card-step="'+id+'" data-delta="-1" aria-label="'+(qty===1?'Удалить из корзины: ':'Уменьшить количество: ')+name+'">−</button>'+
+ '<input type="number" inputmode="numeric" min="1" max="999" data-card-input="'+id+'" value="'+(qty||1)+'" aria-label="Количество '+name+' в корзине">'+
+ '<button type="button" data-card-step="'+id+'" data-delta="1" aria-label="Увеличить количество: '+name+'"'+(qty>=999?' disabled':'')+'>+</button></div></div>';
+}
 function productCard(p) {
  return '<article class="product-card" data-sku="'+escapeHTML(p.sku)+'">'+
  '<button type="button" class="product-photo-link" data-open-product="'+escapeHTML(p.id)+'" aria-label="Открыть карточку '+escapeHTML(p.name)+'">'+photo(p)+'</button>'+
  '<div class="meta product-pills">'+categoryPill(p)+categoryPill(p,true)+'</div>'+
  '<button class="name" data-open-product="'+escapeHTML(p.id)+'" type="button">'+escapeHTML(p.name)+'</button>'+
- '<div class="price">'+rub(p.price)+'</div><div class="small muted">Арт. '+escapeHTML(p.sku)+' · демо-цена</div></article>';
+ '<div class="price">'+rub(p.price)+'</div><div class="small muted">Арт. '+escapeHTML(p.sku)+' · демо-цена</div>'+cardCart(p)+'</article>';
 }
 function cardsTo(selector,list) {
  const target = $(selector); if (!target) return;
@@ -265,11 +274,29 @@ function openProduct(id) {
 function count(){return Object.values(state.cart).reduce((sum,n)=>sum+n,0)}
 function total(){return PRODUCTS.reduce((sum,p)=>sum+p.price*(state.cart[p.id]||0),0)}
 function badge(){$('#cartBadge').textContent=count()}
+function syncCardCart(id) {
+ const qty=state.cart[id]||0,p=PRODUCTS.find(product=>product.id===id);
+ if(!p)return;
+ $$('[data-card-cart="'+id+'"]').forEach(card=>{
+  const add=$('[data-card-add]',card),stepper=$('.card-stepper',card),input=$('[data-card-input]',card);
+  const focused=document.activeElement,moveToQuantity=focused===add&&qty>0,moveToAdd=card.contains(focused)&&!qty;
+  add.hidden=qty>0;stepper.hidden=qty===0;
+  if(input!==focused)input.value=String(qty||1);
+  $('[data-delta="1"]',card).disabled=qty>=999;
+  $('[data-delta="-1"]',card).setAttribute('aria-label',(qty===1?'Удалить из корзины: ':'Уменьшить количество: ')+p.name);
+  if(moveToQuantity)input.focus({preventScroll:true});
+  else if(moveToAdd)add.focus({preventScroll:true});
+ });
+}
+function announceCardCart(id) {
+ const p=PRODUCTS.find(product=>product.id===id),status=$('#cartFeedback');
+ if(p&&status)status.textContent=p.name+': '+(state.cart[id]?'в демо-корзине '+state.cart[id]+' шт.':'удалён из демо-корзины.');
+}
 function setCartQty(id,qty,rerender=true) {
  if(!/^\d{1,12}$/.test(id))return;
  const n=normalQty(qty,true);
  if(n===0)delete state.cart[id];else state.cart[id]=n;
- save();badge();if(rerender)renderCart();else renderCartTotals();
+ save();badge();syncCardCart(id);if(rerender)renderCart();else renderCartTotals();
 }
 function addToCart() {
  const qty=normalQty($('#productQty').value);$('#productQty').value=qty;
@@ -310,6 +337,14 @@ document.addEventListener('click',event=>{
  }
  const theme=target.closest('.theme-btn[data-theme]');
  if(theme&&THEMES[theme.dataset.theme]){state.theme=theme.dataset.theme;state.themeChoice=true;applyTheme();return}
+ const cardAdd=target.closest('[data-card-add]');
+ if(cardAdd){
+  // A double-click on the last minus must not re-add via the newly shown button.
+  if(event.detail>1)return;
+  const id=cardAdd.dataset.cardAdd;setCartQty(id,(state.cart[id]||0)+1,false);announceCardCart(id);return;
+ }
+ const cardStep=target.closest('[data-card-step]');
+ if(cardStep){const id=cardStep.dataset.cardStep;setCartQty(id,(state.cart[id]||0)+Number(cardStep.dataset.delta),false);announceCardCart(id);return}
  const browse=target.closest('[data-browse-cat]');
  if(browse){
   const cat=browse.dataset.browseCat,sub=browse.dataset.browseSub;
@@ -347,6 +382,9 @@ document.addEventListener('click',event=>{
 });
 document.addEventListener('input',event=>{
  const target=event.target;
+ if(target.matches('[data-card-input]')){
+  const n=Number(target.value);if(Number.isInteger(n)&&n>=1&&n<=999){setCartQty(target.dataset.cardInput,n,false);announceCardCart(target.dataset.cardInput);}return;
+ }
  if(target.matches('[data-cart-input]')){
   const n=Number(target.value);if(Number.isInteger(n)&&n>=1&&n<=999)setCartQty(target.dataset.cartInput,n,false);
  }
@@ -354,6 +392,7 @@ document.addEventListener('input',event=>{
 document.addEventListener('change',event=>{
  const target=event.target;
  if(target.id==='sortSelect'){navigate(catalogRoute({sort:target.value}));return}
+ if(target.matches('[data-card-input]')){target.value=normalQty(target.value);setCartQty(target.dataset.cardInput,Number(target.value),false);announceCardCart(target.dataset.cardInput);return}
  if(target.matches('[data-cart-input]')){target.value=normalQty(target.value);setCartQty(target.dataset.cartInput,Number(target.value),false);return}
  if(target.id==='productQty')target.value=normalQty(target.value);
 });
