@@ -26,7 +26,7 @@ function applyTheme(){
  const c=THEMES[state.theme];
  $('#site').setAttribute('data-theme',state.theme);
  for(const [k,v] of Object.entries(c))$('#site').style.setProperty('--'+k,v);
- $$('[data-theme]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.theme===state.theme)));
+ $('.theme-btn[data-theme]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.theme===state.theme)));
  save();
 }
 function photo(p,cls=''){
@@ -36,7 +36,7 @@ function photo(p,cls=''){
 }
 function productCard(p){
  return '<article class="product-card">'+
- photo(p)+
+ '<button type="button" class="product-photo-link" data-open-product="'+p.id+'" aria-label="Открыть карточку '+p.name+'">'+photo(p)+'</button>'+
  '<div class="meta">'+p.cat+(p.col?' · '+p.col:'')+'</div>'+
  '<button class="name" data-open-product="'+p.id+'" type="button">'+p.name+'</button>'+
  '<div class="price">'+rub(p.price)+'</div><div class="small muted">Арт. '+p.sku+' · демо-цена</div>'+
@@ -126,7 +126,7 @@ function renderCart(){
 }
 document.addEventListener('error',e=>{if(e.target instanceof HTMLImageElement){const ph=e.target.closest('.photo');if(ph)ph.classList.add('fault')}},true);
 document.addEventListener('click',e=>{
- const theme=e.target.closest('[data-theme]');
+ const theme=e.target.closest('.theme-btn[data-theme]');
  if(theme){state.theme=theme.dataset.theme;applyTheme();return}
  const flt=e.target.closest('[data-filter]');
  if(flt){state[flt.dataset.filter]=flt.dataset.value;renderCatalog();return}
