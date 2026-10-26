@@ -101,6 +101,13 @@ for sku in ids:
     must(sku in manifest,"Missing validated product/source mapping for "+sku)
     must(f"photo:'./assets/products/{sku}.webp'" in JS,"Product "+sku+" does not use checked local photo")
 
+# Regression: theme attribute exists on .site, so generic [data-theme] would
+# capture all navigation/product/cart clicks through closest().
+must("e.target.closest('.theme-btn[data-theme]')" in JS,"Theme handler must target palette buttons only")
+must("e.target.closest('[data-theme]')" not in JS,"Theme handler swallows all site clicks")
+must("$('.theme-btn[data-theme]').forEach" in JS,"Theme state updates must target palette buttons")
+must('class="product-photo-link"' in JS and 'data-open-product=' in JS,"Product photos are not interactive")
+
 print("Checked:",len(ids),"unique SKUs, images, manifest, routes, themes, logo, UI icons and gutters")
 if ERRORS:
     print("FAILED:",len(ERRORS),"checks")
