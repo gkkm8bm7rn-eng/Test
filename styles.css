@@ -149,3 +149,8 @@
 .theme-btn[data-theme="olive"][aria-pressed="true"]{border-color:#6B3E47;background:#F4EEDF}
 .theme-btn[data-theme="petrol"][aria-pressed="true"]{border-color:#B5775C;background:#F3F1EC}
 @media(max-width:620px){.swatches i{width:9px}.theme-btn{gap:7px;font-size:11px}}
+
+/* Product images also open the related product detail. */
+.product-photo-link{border:0;padding:0;margin:0;display:block;width:100%;background:transparent;text-align:inherit;color:inherit;border-radius:0}
+.product-photo-link .photo{width:100%}
+.product-photo-link:focus-visible{outline:2px solid var(--primary);outline-offset:3px}
